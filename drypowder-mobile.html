@@ -1,0 +1,811 @@
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body,html{height:100%;font-family:system-ui,-apple-system,sans-serif;font-size:13px;color:#111827;background:#f3f4f6}
+.phone{width:390px;height:844px;margin:20px auto;background:#fff;border-radius:40px;overflow:hidden;display:flex;flex-direction:column;border:8px solid #1a1a1a;position:relative}
+.status-bar{display:flex;justify-content:space-between;align-items:center;padding:8px 24px 0;height:44px;flex-shrink:0}
+.status-time{font-size:15px;font-weight:600}
+.status-icons{display:flex;gap:5px;align-items:center}
+.header{display:flex;align-items:center;justify-content:space-between;padding:4px 16px 12px;flex-shrink:0}
+.header-left{display:flex;align-items:center;gap:8px}
+.back-arrow{width:24px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.header-title div:first-child{font-size:11px;color:#9ca3af}
+.header-title div:last-child{font-size:16px;font-weight:600}
+.avatar-sm{width:30px;height:30px;border-radius:50%;background:#166534;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:600}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.filter-dd{margin:0 16px 12px;position:relative;flex-shrink:0}
+.filter-dd-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 12px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;font-size:13px;font-weight:600;color:#111827;cursor:pointer;font-family:inherit}
+.filter-dd-btn svg{flex-shrink:0}
+.filter-dd-menu{position:absolute;top:100%;left:0;right:0;margin-top:4px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:20;padding:4px 0;display:none}
+.filter-dd-menu.open{display:block}
+.filter-dd-opt{display:block;width:100%;text-align:left;padding:10px 12px;font-size:13px;cursor:pointer;border:none;background:transparent;color:#6b7280;font-family:inherit}
+.filter-dd-opt.active{color:#111827;font-weight:600}
+.filter-dd-opt:active{background:#f9fafb}
+.m-stat-hero{padding:0 16px;margin-bottom:12px}
+.m-stat-hero-val{font-size:32px;font-weight:700;color:#111827}
+.m-stat-hero-label{font-size:11px;color:#9ca3af}
+.m-stat-credit{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:13px;font-weight:600;color:#15803d}
+.m-ctrl{display:flex;align-items:center;padding:8px 16px;font-size:11px;gap:6px}
+.m-ctrl-count{font-weight:700;color:#111827;font-size:13px}
+.m-ctrl-btn{background:none;border:1px solid #d1d5db;border-radius:5px;cursor:pointer;font-size:10px;color:#6b7280;padding:4px 8px;font-family:inherit}
+.m-ctrl-btn:active{background:#f3f4f6}
+.m-search-icon{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:5px;cursor:pointer;background:none;border:1px solid #d1d5db;color:#6b7280;margin-right:6px;flex-shrink:0}
+.m-search-inline{display:flex;align-items:center;gap:6px;flex:1}
+.m-search-inline input{flex:1;border:none;outline:none;font-size:12px;font-family:inherit;color:#111827;background:transparent}
+.m-search-inline input::placeholder{color:#9ca3af}
+.m-search-close{background:none;border:none;cursor:pointer;color:#9ca3af;font-size:14px;padding:0 4px;font-family:inherit}
+.toggle-m-wrap{display:flex;align-items:center;gap:4px}
+.toggle-m-track{width:32px;height:18px;border-radius:9px;background:#d1d5db;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle-m-track.on{background:#166534}
+.toggle-m-thumb{width:14px;height:14px;border-radius:7px;background:#fff;position:absolute;top:2px;left:2px;transition:left .2s}
+.toggle-m-track.on .toggle-m-thumb{left:16px}
+.toggle-m-label{font-size:10px;font-weight:500;color:#374151;cursor:pointer}
+.m-table{width:100%;border-collapse:collapse;margin:0 0 8px}
+.m-table th{text-align:left;font-size:10px;font-weight:500;color:#9ca3af;padding:6px 16px;background:#f9fafb;border-bottom:1px solid #e5e7eb;border-top:1px solid #e5e7eb;cursor:pointer;user-select:none;white-space:nowrap}
+.m-table th:hover{color:#6b7280}
+.m-table th.r{text-align:right}
+.m-table th.active{color:#111827}
+.m-table th .sa{display:inline-block;margin-left:3px;font-size:9px;color:#9ca3af}
+.m-table th.active .sa{color:#111827}
+.m-table th.ns{cursor:default}
+.m-table th.ns:hover{color:#9ca3af}
+.m-job-row{cursor:pointer;border-top:1px solid #e5e7eb}
+.m-job-row:active{background:#f9fafb}
+.m-job-row td{padding:10px 12px;font-size:12px;vertical-align:middle}
+.m-job-row td:first-child{padding-left:16px}
+.m-job-row td:last-child{padding-right:16px}
+.m-job-row td.r{text-align:right}
+.m-chk{width:18px;height:18px;border-radius:4px;border:1.5px solid #d1d5db;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.m-chk.on{border:none;background:#166534}
+.m-chev{display:inline-block;color:#9ca3af;transition:transform .2s;transform:rotate(90deg);vertical-align:middle}
+.m-chev.open{transform:rotate(180deg)}
+.m-job-name{font-size:12px;font-weight:400;color:#111827}
+.m-job-meta{font-size:10px;color:#9ca3af;margin-top:1px}
+.m-job-meta .green{color:#15803d;font-weight:500}
+.m-inv-row{background:#f9fafb;border-top:1px solid #f3f4f6;cursor:pointer}
+.m-inv-row:active{background:#f3f4f6}
+.m-inv-row td{padding:8px 12px;font-size:11px;vertical-align:middle}
+.m-inv-row td:first-child{padding-left:16px}
+.m-inv-row td:last-child{padding-right:16px}
+.m-inv-row td.r{text-align:right}
+.m-inv-num{font-size:11px;font-weight:500;color:#111827}
+.m-inv-po{font-size:9px;color:#9ca3af}
+.m-inv-date{font-size:10px;color:#9ca3af}
+.m-cr-row{background:#f0fdf4;border-top:1px solid #dcfce7;cursor:pointer}
+.m-cr-row:active{background:#dcfce7}
+.m-cr-row td{padding:8px 12px;font-size:11px;vertical-align:middle}
+.m-cr-row td:first-child{padding-left:16px}
+.m-cr-row td:last-child{padding-right:16px}
+.m-cr-row td.r{text-align:right}
+.m-cr-type{font-size:11px;font-weight:500;color:#15803d}
+.m-cr-ref{font-size:9px;color:#6b7280}
+.m-cr-amt{font-size:11px;font-weight:600;color:#15803d}
+.m-badge{font-size:8px;padding:1px 3px;border-radius:2px;color:#2563eb;border:1px solid #dbeafe;background:#eff6ff}
+.m-flat-inv-row{border-top:1px solid #f3f4f6;cursor:pointer}
+.m-flat-inv-row:active{background:#f9fafb}
+.m-flat-inv-row td{padding:9px 12px;font-size:11px;vertical-align:middle}
+.m-flat-inv-row td:first-child{padding-left:16px}
+.m-flat-inv-row td:last-child{padding-right:16px}
+.m-flat-inv-row td.r{text-align:right}
+.m-flat-cr-row{background:#f0fdf4;border-top:1px solid #dcfce7;cursor:pointer}
+.m-flat-cr-row:active{background:#dcfce7}
+.m-flat-cr-row td{padding:9px 12px;font-size:11px;vertical-align:middle}
+.m-flat-cr-row td:first-child{padding-left:16px}
+.m-flat-cr-row td:last-child{padding-right:16px}
+.m-flat-cr-row td.r{text-align:right}
+.m-pay{flex-shrink:0;background:#fff;border-top:1px solid #e5e7eb;box-shadow:0 -8px 24px rgba(0,0,0,.12);border-radius:20px 20px 0 0}
+.m-pay-handle{display:flex;justify-content:center;padding:8px 0 4px;cursor:pointer}
+.m-pay-handle-line{width:36px;height:4px;border-radius:2px;background:#d1d5db}
+.m-pay-collapsed{padding:0 16px 8px}
+.m-pay-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+.m-pay-total-label{font-size:11px;color:#6b7280}
+.m-pay-total-amt{font-size:20px;font-weight:700}
+.m-pay-bank{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#6b7280;padding:1px 0 0}
+.m-pay-bank button{font-size:10px;color:#2563eb;background:none;border:none;cursor:pointer;font-family:inherit;font-weight:500}
+.m-pay-expanded{padding:0 16px 4px;display:none}
+.m-pay-expanded.show{display:block}
+.m-pay-detail{display:flex;justify-content:space-between;font-size:11px;padding:5px 0}
+.m-pay-detail .label{color:#6b7280}
+.m-pay-detail .val{color:#111827;font-weight:500}
+.m-pay-detail .val.green{color:#15803d}
+.m-pay-detail .val.muted{color:#d1d5db}
+.m-pay-divider{border-top:1px solid #e5e7eb;margin:4px 0}
+.m-pay-save{text-align:center;font-size:11px;font-weight:600;color:#15803d;padding:2px 0 6px}
+.m-pay-btn-wrap{padding:2px 16px 2px}
+.m-pay-btn{width:100%;background:#166534;color:#fff;border:none;border-radius:12px;padding:12px 0;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+.m-pay-btn:active{background:#15532d}
+.m-home-bar{width:134px;height:5px;background:#1a1a1a;border-radius:3px;margin:8px auto 4px}
+.m-pm-dialog{padding:6px 0 4px}
+.m-pm-title{font-size:12px;font-weight:600;color:#111827;margin-bottom:6px}
+.m-pm-opt{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:4px;cursor:pointer;background:#fff;font-size:11px}
+.m-pm-opt.selected{border-color:#166534;background:#f0fdf4}
+.m-pm-radio{width:16px;height:16px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.m-pm-opt.selected .m-pm-radio{border-color:#166534}
+.m-pm-radio-dot{width:8px;height:8px;border-radius:50%;background:#166534;display:none}
+.m-pm-opt.selected .m-pm-radio-dot{display:block}
+.m-pm-add{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1px dashed #d1d5db;border-radius:8px;margin-bottom:4px;cursor:pointer;background:#fff}
+.m-pm-add-label{font-size:10px;font-weight:500;color:#2563eb}
+.m-pm-type-picker{display:flex;gap:6px;margin-bottom:8px}
+.m-pm-type-opt{flex:1;padding:8px;border:1px solid #e5e7eb;border-radius:6px;text-align:center;cursor:pointer;background:#fff}
+.m-pm-type-opt.selected{border-color:#166534;background:#f0fdf4}
+.m-pm-type-opt-label{font-size:10px;font-weight:500;color:#111827}
+.m-pm-form-field{margin-bottom:6px}
+.m-pm-form-label{font-size:9px;font-weight:500;color:#6b7280;margin-bottom:2px}
+.m-pm-form-input{width:100%;padding:8px;border:1px solid #e5e7eb;border-radius:6px;font-size:11px;color:#111827;font-family:inherit;background:#fff;outline:none}
+.m-pm-form-input:focus{border-color:#166534}
+.m-pm-form-row{display:flex;gap:6px}
+.m-pm-form-row .m-pm-form-field{flex:1}
+.m-pm-form-actions{display:flex;gap:6px;margin-top:8px}
+.m-pm-form-cancel,.m-pm-form-submit{flex:1;padding:8px 0;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit}
+.m-pm-form-cancel{border:1px solid #d1d5db;background:#fff;color:#6b7280;font-weight:500}
+.m-pm-form-submit{border:none;background:#166534;color:#fff;font-weight:600}
+</style>
+
+<div class="phone" id="phone"></div>
+
+<script>
+const RATE=0.097;
+const JOB_NAMES=[
+  {name:"Unassigned",sub:"",cr:[{type:"Account credit",ref:"CR #0099",amt:4250}]},
+  {name:"Johnson",sub:"School",cr:[{type:"Overpayment",ref:"PMT #7712",amt:6800}]},
+  {name:"Schon",sub:"Academy",cr:[{type:"Overpayment credit",ref:"PMT #8821",amt:12450},{type:"Return — lumber",ref:"RTN #2401-534888",amt:5680}]},
+  {name:"Riverside",sub:"Commons",cr:[]},
+  {name:"Grandview",sub:"Terraces",cr:[{type:"Overpayment",ref:"PMT #9031",amt:18200}]},
+  {name:"Lakeside",sub:"Manor",cr:[{type:"Return — flooring",ref:"RTN #2401-535712",amt:15400}]},
+  {name:"Oakmont",sub:"Ridge",cr:[{type:"Price adjustment",ref:"ADJ #0288",amt:3200}]},
+  {name:"Pinehurst",sub:"Village",cr:[]},
+  {name:"Cedarwood",sub:"Park",cr:[{type:"Overpayment",ref:"PMT #9102",amt:4800}]},
+  {name:"Willowbrook",sub:"Estates",cr:[]},
+  {name:"Stonebridge",sub:"Landing",cr:[{type:"Return — hardware",ref:"RTN #2401-536001",amt:2950}]},
+  {name:"Hawthorne",sub:"Heights",cr:[]},
+  {name:"Birchfield",sub:"Crossing",cr:[{type:"Volume discount",ref:"DSC #0512",amt:7600}]},
+  {name:"Foxglove",sub:"Meadows",cr:[]},
+  {name:"Summit",sub:"Pointe",cr:[{type:"Overpayment",ref:"PMT #9244",amt:5100}]},
+  {name:"Creekside",sub:"Villas",cr:[]},
+  {name:"Ashford",sub:"Place",cr:[{type:"Return — roofing",ref:"RTN #2401-536120",amt:8400}]},
+  {name:"Thornberry",sub:"Commons",cr:[]},
+  {name:"Magnolia",sub:"Court",cr:[{type:"Price adjustment",ref:"ADJ #0301",amt:2100}]},
+  {name:"Ironwood",sub:"Station",cr:[]},
+  {name:"Ridgemont",sub:"Farms",cr:[{type:"Overpayment",ref:"PMT #9310",amt:6200}]},
+  {name:"Harvest",sub:"Glen",cr:[]},
+  {name:"Copperfield",sub:"West",cr:[{type:"Return — siding",ref:"RTN #2401-536280",amt:4500}]},
+  {name:"Windermere",sub:"Lakes",cr:[]},
+  {name:"Bayshore",sub:"Terrace",cr:[{type:"Volume discount",ref:"DSC #0588",amt:9800}]},
+  {name:"Elmwood",sub:"Gardens",cr:[]},
+  {name:"Silverton",sub:"Bluffs",cr:[{type:"Overpayment",ref:"PMT #9401",amt:3700}]},
+  {name:"Preston",sub:"Oaks",cr:[]},
+  {name:"Kensington",sub:"Square",cr:[{type:"Return — windows",ref:"RTN #2401-536410",amt:11200}]},
+];
+
+const JOBS=[];const banks=[{name:"Citizens Bank NA",last4:"6340",type:"Checking"},{name:"Chase Business",last4:"8821",type:"Checking"},{name:"Bank of America",last4:"4455",type:"Savings"}];
+let invNum=534900,totalInv=0;const TARGET=238000;
+const dates=["08-15-2025","09-01-2025","09-20-2025","10-05-2025","10-22-2025","11-01-2025","11-15-2025","12-01-2025","12-10-2025","12-20-2025","01-05-2026","01-15-2026","01-28-2026","02-05-2026","02-14-2026","02-28-2026","03-01-2026","03-08-2026","03-15-2026"];
+const crDates=["01-08-2026","01-15-2026","01-30-2026","02-01-2026","02-14-2026","02-20-2026","02-28-2026","03-01-2026"];
+const baseAmts=[18720,22450,14780,31200,18950,12480,8760,28640,15220,42800,24600,35900,21200,8300,9450,11200,7800,6500,5200,4100,3800,2900,7200,6100,5400,4800,3200,2600,8900,7400,6300,5100,4200,3600,2800,9100,7800,6400,5300,4400,3700,3100,2500,8600,7100,6000,4900,4000,3400,2700];
+let ai=0;
+JOB_NAMES.forEach((jn,ji)=>{const id=jn.name.toLowerCase().replace(/\s/g,"");const numInv=ji<6?2+Math.floor(Math.random()*2):1+Math.floor(Math.random()*3);const invs=[];for(let k=0;k<numInv;k++){invNum++;const amt=baseAmts[ai%baseAmts.length];ai++;const isNew=ji>20&&k===0;invs.push({id:id+"i"+k,num:"#2401-"+invNum,total:amt,onStmt:!isNew,isNew,soldOn:dates[(ji*2+k)%dates.length],overdue:false})}totalInv+=invs.reduce((s,i)=>s+i.total,0);const creds=jn.cr.map((c,ci)=>({id:id+"c"+ci,type:c.type,ref:c.ref,date:crDates[(ji+ci)%crDates.length],amount:c.amt,onStmt:true,isNew:false}));JOBS.push({id,name:jn.name,sub:jn.sub,credits:creds,invoices:invs})});
+const scale=TARGET/totalInv;JOBS.forEach(j=>{j.invoices.forEach(i=>{i.total=Math.round(i.total*scale*100)/100})});
+
+let S={filter:"stmt",groupOn:true,sortMode:"balance-desc",searchOpen:false,searchText:"",filterOpen:false,payExpanded:false,payMethodOpen:false,addingMethod:false,addType:"bank",selectedBank:0,expanded:{},checked:{},crSel:{}};
+JOBS.forEach(j=>{j.invoices.forEach(i=>{if(i.onStmt)S.checked[i.id]=true});j.credits.forEach(c=>{if(c.onStmt)S.crSel[c.id]=true})});
+
+const fm=n=>"$"+Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const fc=n=>"("+fm(n)+")";
+const sm=(a,f)=>parseFloat(a.reduce((s,x)=>s+f(x),0).toFixed(2));
+const chk='<svg viewBox="0 0 10 8" fill="none" style="width:9px;height:7px"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const chevSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="18 15 12 9 6 15"/></svg>';
+const backSvg='<svg viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="15 18 9 12 15 6"/></svg>';
+const chevDown='<svg viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="6 9 12 15 18 9"/></svg>';
+const searchSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
+const addSvg='<svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:10px;height:10px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+
+function vis(){return JOBS.flatMap(j=>j.invoices.filter(i=>S.filter==="stmt"?i.onStmt:i.isNew).map(i=>({job:j,inv:i})))}
+function visc(){return JOBS.flatMap(j=>j.credits.filter(c=>S.filter==="stmt"?c.onStmt:c.isNew).map(c=>({job:j,credit:c})))}
+function chkd(){return JOBS.flatMap(j=>j.invoices.filter(i=>S.checked[i.id]).map(i=>({job:j,inv:i})))}
+function crsel(){return JOBS.flatMap(j=>j.credits.filter(c=>S.crSel[c.id]).map(c=>({job:j,credit:c})))}
+function vjids(){const a=vis(),b=visc(),s=new Set();a.forEach(p=>s.add(p.job.id));b.forEach(p=>s.add(p.job.id));return s}
+
+function sortJ(list){
+  const vi=vis(),vc=visc();
+  return[...list].sort((a,b)=>{
+    const bal=j=>sm(j.invoices,i=>i.total);const crt=j=>sm(vc.filter(p=>p.job.id===j.id),p=>p.credit.amount);const ic=j=>vi.filter(p=>p.job.id===j.id).length+vc.filter(p=>p.job.id===j.id).length;const nm=j=>(j.name+" "+j.sub).toLowerCase();
+    switch(S.sortMode){
+      case"name-asc":return nm(a).localeCompare(nm(b));case"name-desc":return nm(b).localeCompare(nm(a));
+      case"balance-desc":return bal(b)-bal(a);case"balance-asc":return bal(a)-bal(b);
+      case"credits-desc":return crt(b)-crt(a);case"credits-asc":return crt(a)-crt(b);
+      case"items-desc":return ic(b)-ic(a);case"items-asc":return ic(a)-ic(b);
+      default:return bal(b)-bal(a);
+    }
+  });
+}
+function filterSearch(jobs){if(!S.searchText)return jobs;const q=S.searchText.toLowerCase();return jobs.filter(j=>(j.name+" "+j.sub).toLowerCase().includes(q))}
+
+function render(){
+  const vi=vis(),vc=visc(),ci=chkd(),cs=crsel();
+  const vt=sm(vi,p=>p.inv.total),vcrt=sm(vc,p=>p.credit.amount);
+  const is=sm(ci,p=>p.inv.total),ca=sm(cs,p=>p.credit.amount);
+  const disc=is>0?parseFloat((is*RATE).toFixed(2)):0,pay=Math.max(0,parseFloat((is-ca-disc).toFixed(2)));
+  const cj=[...new Set(ci.map(p=>p.job.id))],has=ci.length>0;
+  const ids=vjids(),allVis=sortJ(JOBS.filter(j=>ids.has(j.id))),vJ=filterSearch(allVis);
+  const ae=vJ.length>0&&vJ.every(j=>S.expanded[j.id]),ac=vi.length>0&&vi.every(p=>S.checked[p.inv.id]);
+  const stmtInvs=JOBS.flatMap(j=>j.invoices.filter(i=>i.onStmt));
+  const allStmt=stmtInvs.length>0&&stmtInvs.every(i=>S.checked[i.id]);
+  const payLbl=allStmt&&S.filter==="stmt"?"Pay current statement":"Pay "+fm(pay)+" of statement";
+  const fLabels={stmt:"Current statement","new":"Since last statement"};
+  const ab=banks[S.selectedBank];
+  const itemCount=S.groupOn?vJ.length+" job"+(vJ.length!==1?"s":""):vi.length+" inv";
+
+  const sCol=S.sortMode.replace(/-asc|-desc/,""),sDir=S.sortMode.endsWith("-asc")?"asc":"desc";
+  const thA=c=>sCol!==c?'<span class="sa">↕</span>':sDir==="asc"?'<span class="sa">↑</span>':'<span class="sa">↓</span>';
+  const thC=c=>sCol===c?" active":"";
+
+  let h=`<div class="status-bar"><span class="status-time">9:41</span><div class="status-icons"><span style="font-size:10px;color:#111">●●●●</span></div></div>`;
+  h+=`<div class="header"><div class="header-left"><div class="back-arrow">${backSvg}</div><div class="header-title"><div>Bliffert Lumber & Design</div><div>Harbor Homes charges</div></div></div><div class="avatar-sm">RJ</div></div>`;
+  h+=`<div class="filter-dd"><button class="filter-dd-btn" onclick="mTogFilter()">${fLabels[S.filter]}${chevDown}</button><div class="filter-dd-menu${S.filterOpen?" open":""}">${Object.entries(fLabels).map(([k,v])=>`<button class="filter-dd-opt${S.filter===k?" active":""}" onclick="mSetF('${k}')">${v}</button>`).join("")}</div></div>`;
+
+  h+=`<div class="scroll">`;
+
+  h+=`<div class="m-stat-hero"><div class="m-stat-hero-val">${fm(vt)}</div><div class="m-stat-hero-label">Total due</div>${vcrt>0?`<div class="m-stat-credit">-${fm(vcrt)} credits</div>`:""}</div>`;
+
+  h+=`<div class="m-ctrl">`;
+  if(S.searchOpen){
+    h+=`<div class="m-search-inline">${searchSvg}<input type="text" placeholder="Search jobs..." value="${S.searchText}" oninput="mSearch(this.value)" autofocus><button class="m-search-close" onclick="mCloseSearch()">✕</button></div>`;
+  } else {
+    h+=`<button class="m-search-icon" onclick="mOpenSearch()">${searchSvg}</button>`;
+    h+=`<span class="m-ctrl-count">${itemCount}</span>`;
+    if(S.groupOn) h+=`<button class="m-ctrl-btn" onclick="mTogExpAll()">${ae?"Collapse":"Expand"}</button>`;
+    h+=`<span style="flex:1"></span>`;
+    h+=`<div class="toggle-m-wrap"><div class="toggle-m-track${S.groupOn?" on":""}" onclick="mTogGroup()"><div class="toggle-m-thumb"></div></div><span class="toggle-m-label" onclick="mTogGroup()">Group</span></div>`;
+  }
+  h+=`</div>`;
+
+  if(S.groupOn){
+    h+=`<table class="m-table"><thead><tr>
+      <th class="ns" style="width:30px"><div class="m-chk${ac?" on":""}" onclick="mTogSelAll()">${ac?chk:""}</div></th>
+      <th class="ns" style="width:20px"></th>
+      <th class="${thC("name")}" onclick="mColSort('name')">Job${thA("name")}</th>
+      <th class="r${thC("balance")}" onclick="mColSort('balance')">Bal${thA("balance")}</th>
+    </tr></thead><tbody>`;
+
+    vJ.forEach(j=>{
+      const pr=vi.filter(p=>p.job.id===j.id),jc=vc.filter(p=>p.job.id===j.id);
+      const jAll=sm(j.invoices,i=>i.total),jCrT=sm(jc,p=>p.credit.amount);
+      const ao=pr.length>0&&pr.every(p=>S.checked[p.inv.id]),ex=S.expanded[j.id];
+      const ic=pr.length,cc=jc.length,pts=[];if(ic)pts.push(ic+" inv");if(cc)pts.push(cc+" cr");
+
+      h+=`<tr class="m-job-row" onclick="mTogExp('${j.id}')">
+        <td><div class="m-chk${ao?" on":""}" onclick="event.stopPropagation();mTogJobChk('${j.id}')">${ao?chk:""}</div></td>
+        <td><span class="m-chev${ex?" open":""}">${chevSvg}</span></td>
+        <td><div class="m-job-name">${j.name} ${j.sub}</div><div class="m-job-meta">${pts.join(" · ")}${jCrT>0?` · <span class="green">-${fm(jCrT)}</span>`:""}</div></td>
+        <td class="r" style="font-weight:500">${fm(jAll)}</td>
+      </tr>`;
+
+      if(ex){
+        jc.forEach(p=>{
+          h+=`<tr class="m-cr-row" onclick="mTogCr('${p.credit.id}')">
+            <td><div class="m-chk${S.crSel[p.credit.id]?" on":""}" onclick="event.stopPropagation();mTogCr('${p.credit.id}')">${S.crSel[p.credit.id]?chk:""}</div></td>
+            <td></td>
+            <td><div class="m-cr-type">${p.credit.type}</div><div class="m-cr-ref">${p.credit.ref}</div></td>
+            <td class="r"><span class="m-cr-amt">-${fm(p.credit.amount)}</span></td>
+          </tr>`;
+        });
+        pr.forEach(p=>{
+          h+=`<tr class="m-inv-row" onclick="mTogInv('${p.inv.id}')">
+            <td><div class="m-chk${S.checked[p.inv.id]?" on":""}" onclick="event.stopPropagation();mTogInv('${p.inv.id}')">${S.checked[p.inv.id]?chk:""}</div></td>
+            <td></td>
+            <td><div class="m-inv-num">${p.inv.num}</div><div class="m-inv-po">PO #${4800+Math.abs(p.inv.num.charCodeAt(10)*7)%400} · ${p.inv.soldOn}</div></td>
+            <td class="r">${p.inv.isNew?'<span class="m-badge">NEW</span> ':""}${fm(p.inv.total)}</td>
+          </tr>`;
+        });
+      }
+    });
+    h+=`</tbody></table>`;
+  } else {
+    h+=`<table class="m-table"><thead><tr>
+      <th class="ns" style="width:30px"><div class="m-chk${ac?" on":""}" onclick="mTogSelAll()">${ac?chk:""}</div></th>
+      <th>Invoice</th>
+      <th>Job</th>
+      <th class="r">Amount</th>
+    </tr></thead><tbody>`;
+    const flatCr=vc;
+    flatCr.forEach(p=>{
+      h+=`<tr class="m-flat-cr-row" onclick="mTogCr('${p.credit.id}')">
+        <td><div class="m-chk${S.crSel[p.credit.id]?" on":""}" onclick="event.stopPropagation();mTogCr('${p.credit.id}')">${S.crSel[p.credit.id]?chk:""}</div></td>
+        <td><div class="m-cr-type">${p.credit.type}</div><div class="m-cr-ref">${p.credit.ref}</div></td>
+        <td style="font-size:10px;color:#6b7280">${p.job.name} ${p.job.sub}</td>
+        <td class="r"><span class="m-cr-amt">-${fm(p.credit.amount)}</span></td>
+      </tr>`;
+    });
+    vi.forEach(p=>{
+      h+=`<tr class="m-flat-inv-row" onclick="mTogInv('${p.inv.id}')">
+        <td><div class="m-chk${S.checked[p.inv.id]?" on":""}" onclick="event.stopPropagation();mTogInv('${p.inv.id}')">${S.checked[p.inv.id]?chk:""}</div></td>
+        <td><div class="m-inv-num">${p.inv.num}</div><div class="m-inv-po">PO #${4800+Math.abs(p.inv.num.charCodeAt(10)*7)%400}</div></td>
+        <td style="font-size:10px;color:#9ca3af">${p.job.name} ${p.job.sub}</td>
+        <td class="r">${p.inv.isNew?'<span class="m-badge">NEW</span> ':""}${fm(p.inv.total)}</td>
+      </tr>`;
+    });
+    h+=`</tbody></table>`;
+  }
+
+  h+=`</div>`;
+
+  if(has){
+    h+=`<div class="m-pay"><div class="m-pay-handle" onclick="mTogPay()"><div class="m-pay-handle-line"></div></div><div class="m-pay-collapsed"><div class="m-pay-total-row"><span class="m-pay-total-label">Total payment</span><span class="m-pay-total-amt">${fm(pay)}</span></div><div class="m-pay-bank"><span>${ab.name} ****${ab.last4}</span><button onclick="event.stopPropagation();mOpenPM()">Change</button></div></div>`;
+    h+=`<div class="m-pay-expanded${S.payExpanded?" show":""}">`;
+    if(S.payMethodOpen){
+      h+=`<div class="m-pm-dialog"><div class="m-pm-title">Payment method</div>`;
+      if(S.addingMethod){
+        h+=`<div class="m-pm-type-picker"><div class="m-pm-type-opt${S.addType==="bank"?" selected":""}" onclick="mSetAddType('bank')"><div class="m-pm-type-opt-label">Bank</div></div><div class="m-pm-type-opt${S.addType==="card"?" selected":""}" onclick="mSetAddType('card')"><div class="m-pm-type-opt-label">Card</div></div></div>`;
+        if(S.addType==="bank"){h+=`<div class="m-pm-form-field"><div class="m-pm-form-label">Bank name</div><input class="m-pm-form-input" id="mpm-bank" placeholder="e.g. Wells Fargo"></div><div class="m-pm-form-row"><div class="m-pm-form-field"><div class="m-pm-form-label">Routing</div><input class="m-pm-form-input" id="mpm-routing" placeholder="9 digits"></div><div class="m-pm-form-field"><div class="m-pm-form-label">Account #</div><input class="m-pm-form-input" id="mpm-acct" placeholder="Acct #"></div></div>`}
+        else{h+=`<div class="m-pm-form-field"><div class="m-pm-form-label">Card number</div><input class="m-pm-form-input" id="mpm-cardnum" placeholder="1234 5678 9012 3456"></div><div class="m-pm-form-row"><div class="m-pm-form-field"><div class="m-pm-form-label">Exp</div><input class="m-pm-form-input" id="mpm-exp" placeholder="MM/YY"></div><div class="m-pm-form-field"><div class="m-pm-form-label">CVV</div><input class="m-pm-form-input" id="mpm-cvv" placeholder="123"></div></div><div class="m-pm-form-field"><div class="m-pm-form-label">Name on card</div><input class="m-pm-form-input" id="mpm-cardname" placeholder="Full name"></div>`}
+        h+=`<div class="m-pm-form-actions"><button class="m-pm-form-cancel" onclick="mCancelAdd()">Cancel</button><button class="m-pm-form-submit" onclick="mSubmitAdd()">Add</button></div>`;
+      } else {
+        banks.forEach((b,i)=>{h+=`<div class="m-pm-opt${S.selectedBank===i?" selected":""}" onclick="mSelBank(${i})"><div class="m-pm-radio"><div class="m-pm-radio-dot"></div></div><div style="flex:1"><div style="font-weight:500">${b.name} ****${b.last4}</div><div style="font-size:9px;color:#9ca3af">${b.type}</div></div></div>`});
+        h+=`<div class="m-pm-add" onclick="mStartAdd()"><div style="width:14px;height:14px;border-radius:50%;border:1.5px solid #9ca3af;display:flex;align-items:center;justify-content:center">${addSvg}</div><span class="m-pm-add-label">Add new</span></div>`;
+      }
+      h+=`</div><div class="m-pay-divider"></div>`;
+    }
+    if(disc>0)h+=`<div class="m-pay-save">Save ${fm(disc)} today</div>`;
+    h+=`<div class="m-pay-detail"><span class="label">${cj.length} Jobs · ${ci.length} Inv</span><span class="val">${fm(is)}</span></div><div class="m-pay-detail"><span class="label">Credits</span><span class="val${ca>0?" green":" muted"}">${ca?fc(ca):"—"}</span></div><div class="m-pay-detail"><span class="label">Discount</span><span class="val${disc>0?" green":" muted"}">${disc?fc(disc):"—"}</span></div><div class="m-pay-divider"></div><div class="m-pay-detail"><span class="label" style="font-weight:700;color:#111827">Total</span><span class="val" style="font-weight:700">${fm(pay)}</span></div>`;
+    h+=`</div></div><div class="m-pay-btn-wrap"><button class="m-pay-btn">${payLbl}</button></div>`;
+  } else {
+    h+=`<div class="m-pay"><div class="m-pay-handle"><div class="m-pay-handle-line"></div></div><div style="padding:0 16px 4px"><div class="m-pay-total-row"><span class="m-pay-total-label">No invoices selected</span></div></div></div><div class="m-pay-btn-wrap"><button class="m-pay-btn" style="opacity:.4;cursor:default">Select invoices to pay</button></div>`;
+  }
+  h+=`<div class="m-home-bar"></div>`;
+  document.getElementById("phone").innerHTML=h;
+}
+
+function mSetF(f){S.filter=f;S.filterOpen=false;render()}
+function mTogFilter(){S.filterOpen=!S.filterOpen;render()}
+function mTogGroup(){S.groupOn=!S.groupOn;render()}
+function mColSort(col){const d=col+"-desc",a=col+"-asc";S.sortMode=S.sortMode===d?a:d;render()}
+function mTogExp(id){S.expanded[id]=!S.expanded[id];render()}
+function mTogInv(id){S.checked[id]=!S.checked[id];render()}
+function mTogCr(id){S.crSel[id]=!S.crSel[id];render()}
+function mTogJobChk(jid){const j=JOBS.find(x=>x.id===jid),v=j.invoices.filter(i=>S.filter==="stmt"?i.onStmt:i.isNew),on=v.every(i=>S.checked[i.id]);v.forEach(i=>S.checked[i.id]=!on);render()}
+function mTogSelAll(){const vi=vis(),on=vi.every(p=>S.checked[p.inv.id]);vi.forEach(p=>S.checked[p.inv.id]=!on);render()}
+function mTogExpAll(){const ids=vjids(),vJ=JOBS.filter(j=>ids.has(j.id)),on=vJ.every(j=>S.expanded[j.id]);vJ.forEach(j=>S.expanded[j.id]=!on);render()}
+function mOpenSearch(){S.searchOpen=true;render()}
+function mCloseSearch(){S.searchOpen=false;S.searchText="";render()}
+function mSearch(v){S.searchText=v;render()}
+function mTogPay(){S.payExpanded=!S.payExpanded;if(!S.payExpanded){S.payMethodOpen=false;S.addingMethod=false}render()}
+function mOpenPM(){S.payExpanded=true;S.payMethodOpen=true;S.addingMethod=false;render()}
+function mSelBank(i){S.selectedBank=i;S.payMethodOpen=false;render()}
+function mStartAdd(){S.addingMethod=true;S.addType="bank";render()}
+function mSetAddType(t){S.addType=t;render()}
+function mCancelAdd(){S.addingMethod=false;render()}
+function mSubmitAdd(){if(S.addType==="bank"){const n=document.getElementById("mpm-bank")?.value||"New Bank",a=document.getElementById("mpm-acct")?.value||"0000";banks.push({name:n,last4:a.slice(-4).padStart(4,"0"),type:"Checking"})}else{const n=document.getElementById("mpm-cardnum")?.value||"0000",nm=document.getElementById("mpm-cardname")?.value||"Card";banks.push({name:nm,last4:n.replace(/\s/g,"").slice(-4).padStart(4,"0"),type:"Card"})}S.selectedBank=banks.length-1;S.addingMethod=false;S.payMethodOpen=false;render()}
+
+render();
+</script><style>
+*{margin:0;padding:0;box-sizing:border-box}
+body,html{height:100%;font-family:system-ui,-apple-system,sans-serif;font-size:13px;color:#111827;background:#f3f4f6}
+.phone{width:390px;height:844px;margin:20px auto;background:#fff;border-radius:40px;overflow:hidden;display:flex;flex-direction:column;border:8px solid #1a1a1a;position:relative}
+.status-bar{display:flex;justify-content:space-between;align-items:center;padding:8px 24px 0;height:44px;flex-shrink:0}
+.status-time{font-size:15px;font-weight:600}
+.status-icons{display:flex;gap:5px;align-items:center}
+.header{display:flex;align-items:center;justify-content:space-between;padding:4px 16px 12px;flex-shrink:0}
+.header-left{display:flex;align-items:center;gap:8px}
+.back-arrow{width:24px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.header-title div:first-child{font-size:11px;color:#9ca3af}
+.header-title div:last-child{font-size:16px;font-weight:600}
+.avatar-sm{width:30px;height:30px;border-radius:50%;background:#166534;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:600}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.filter-dd{margin:0 16px 16px;position:relative;flex-shrink:0}
+.filter-dd-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 12px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;font-size:13px;font-weight:600;color:#111827;cursor:pointer;font-family:inherit}
+.filter-dd-btn svg{flex-shrink:0}
+.filter-dd-menu{position:absolute;top:100%;left:0;right:0;margin-top:4px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:20;padding:4px 0;display:none}
+.filter-dd-menu.open{display:block}
+.filter-dd-opt{display:block;width:100%;text-align:left;padding:10px 12px;font-size:13px;cursor:pointer;border:none;background:transparent;color:#6b7280;font-family:inherit}
+.filter-dd-opt.active{color:#111827;font-weight:600}
+.filter-dd-opt:active{background:#f9fafb}
+.stats-m{display:flex;gap:8px;padding:0 16px;margin-bottom:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex-wrap:nowrap}
+.stats-m::-webkit-scrollbar{display:none}
+.stat-m{flex:0 0 auto;min-width:120px;background:#f9fafb;border-radius:8px;padding:10px 12px}
+.stat-m-label{font-size:10px;color:#9ca3af;margin-bottom:2px}
+.stat-m-val{font-size:17px;font-weight:600;color:#111827}
+.stat-m-val.green{color:#15803d}
+.ctrl-m{display:flex;align-items:center;padding:8px 16px;margin:0 0 8px}
+.ctrl-m-count{font-size:13px;font-weight:700;color:#111827}
+.ctrl-m-btn{background:none;border:1px solid #d1d5db;border-radius:6px;cursor:pointer;font-size:11px;color:#6b7280;padding:4px 8px;margin-left:6px;font-family:inherit}
+.toggle-m{display:flex;align-items:center;gap:5px}
+.toggle-m-track{width:32px;height:18px;border-radius:9px;background:#d1d5db;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle-m-track.on{background:#166534}
+.toggle-m-thumb{width:14px;height:14px;border-radius:7px;background:#fff;position:absolute;top:2px;left:2px;transition:left .2s}
+.toggle-m-track.on .toggle-m-thumb{left:16px}
+.toggle-m-label{font-size:11px;color:#374151;cursor:pointer}
+.sort-m{display:flex;align-items:center;gap:4px;padding:0 16px 6px;font-size:11px;color:#9ca3af;position:relative}
+.sort-m button{background:none;border:none;font-size:11px;color:#9ca3af;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px}
+.sort-m-menu{position:absolute;top:100%;left:16px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);z-index:10;padding:4px 0;min-width:150px;display:none}
+.sort-m-menu.open{display:block}
+.sort-m-opt{display:block;width:100%;text-align:left;padding:8px 12px;font-size:12px;cursor:pointer;border:none;background:transparent;color:#6b7280;font-family:inherit}
+.sort-m-opt.active{color:#111827;font-weight:500}
+.job-m{margin:0 16px 8px;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden}
+.job-m-hdr{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer}
+.job-m-hdr:active{background:#f9fafb}
+.chk-m{width:20px;height:20px;border-radius:4px;border:1.5px solid #d1d5db;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.chk-m.on{border:none;background:#166534}
+.chev-m{width:16px;height:16px;flex-shrink:0;color:#9ca3af;transition:transform .2s;transform:rotate(90deg)}
+.chev-m.open{transform:rotate(180deg)}
+.job-m-info{flex:1;min-width:0}
+.job-m-name{font-size:13px;font-weight:500;color:#111827}
+.job-m-meta{font-size:11px;color:#9ca3af;display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+.job-m-meta span.red{color:#ef4444;font-weight:500}
+.job-m-meta span.green{color:#15803d;font-weight:500}
+.job-m-body{border-top:1px solid #f3f4f6}
+.inv-m{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer}
+.inv-m:active{background:#f3f4f6}
+.inv-m+.inv-m{border-top:1px solid #f3f4f6}
+.inv-m-info{flex:1;min-width:0}
+.inv-m-num{font-size:12px;font-weight:500;color:#111827}
+.inv-m-date{font-size:10px;color:#9ca3af}
+.inv-m-amt{font-size:12px;color:#6b7280;font-weight:500;white-space:nowrap}
+.cr-m{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;background:#f0fdf4}
+.cr-m:active{background:#dcfce7}
+.cr-m+.cr-m{border-top:1px solid #dcfce7}
+.cr-m-divider{border-top:1px solid #bbf7d0}
+.cr-m-info{flex:1;min-width:0}
+.cr-m-type{font-size:12px;font-weight:500;color:#15803d}
+.cr-m-ref{font-size:10px;color:#6b7280}
+.cr-m-amt{font-size:12px;font-weight:600;color:#15803d;white-space:nowrap}
+.badge-m{font-size:9px;padding:1px 4px;border-radius:3px;color:#2563eb;border:1px solid #dbeafe;background:#eff6ff}
+.pay-bar{flex-shrink:0;background:#fff;border-top:1px solid #e5e7eb;box-shadow:0 -8px 24px rgba(0,0,0,.12);border-radius:20px 20px 0 0;transition:max-height .3s ease}
+.pay-bar-handle{display:flex;justify-content:center;padding:8px 0 4px;cursor:pointer}
+.pay-bar-handle-line{width:36px;height:4px;border-radius:2px;background:#d1d5db}
+.pay-bar-collapsed{padding:0 16px 12px}
+.pay-bar-expanded{padding:0 16px 4px;display:none}
+.pay-bar-expanded.show{display:block}
+.pay-bar-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;padding:0 0 8px}
+.pay-bar-total-label{font-size:12px;color:#6b7280}
+.pay-bar-total-amt{font-size:22px;font-weight:700;color:#111827}
+.pay-bar-detail{display:flex;justify-content:space-between;font-size:12px;padding:6px 0}
+.pay-bar-detail .label{color:#6b7280}
+.pay-bar-detail .val{color:#111827;font-weight:500}
+.pay-bar-detail .val.green{color:#15803d}
+.pay-bar-detail .val.muted{color:#d1d5db}
+.pay-bar-divider{border-top:1px solid #e5e7eb;margin:8px 0}
+.pay-bar-bank{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#6b7280;padding:2px 0 0}
+.pay-bar-bank button{font-size:11px;color:#2563eb;background:none;border:none;cursor:pointer;font-family:inherit;font-weight:500}
+.pm-dialog{padding:8px 0 4px}
+.pm-title{font-size:13px;font-weight:600;color:#111827;margin-bottom:8px}
+.pm-opt{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;margin-bottom:6px;cursor:pointer;background:#fff}
+.pm-opt:active{background:#f9fafb}
+.pm-opt.selected{border-color:#166534;background:#f0fdf4}
+.pm-radio{width:18px;height:18px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pm-opt.selected .pm-radio{border-color:#166534}
+.pm-radio-dot{width:10px;height:10px;border-radius:50%;background:#166534;display:none}
+.pm-opt.selected .pm-radio-dot{display:block}
+.pm-opt-info{flex:1;min-width:0}
+.pm-add{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px dashed #d1d5db;border-radius:10px;margin-bottom:6px;cursor:pointer;background:#fff}
+.pm-add:active{background:#f9fafb}
+.pm-add-icon{width:18px;height:18px;border-radius:50%;border:1.5px solid #9ca3af;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pm-add-label{font-size:12px;font-weight:500;color:#2563eb}
+.pm-type-picker{display:flex;gap:8px;margin-bottom:10px}
+.pm-type-opt{flex:1;padding:10px;border:1px solid #e5e7eb;border-radius:8px;text-align:center;cursor:pointer;background:#fff;font-family:inherit}
+.pm-type-opt:active{background:#f9fafb}
+.pm-type-opt.selected{border-color:#166534;background:#f0fdf4}
+.pm-type-opt-icon{font-size:18px;margin-bottom:2px}
+.pm-type-opt-label{font-size:11px;font-weight:500;color:#111827}
+.pm-form{padding:8px 0 4px}
+.pm-form-title{font-size:13px;font-weight:600;color:#111827;margin-bottom:10px}
+.pm-form-field{margin-bottom:8px}
+.pm-form-label{font-size:10px;font-weight:500;color:#6b7280;margin-bottom:3px}
+.pm-form-input{width:100%;padding:9px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:12px;color:#111827;font-family:inherit;background:#fff;outline:none}
+.pm-form-input:focus{border-color:#166534}
+.pm-form-row{display:flex;gap:8px}
+.pm-form-row .pm-form-field{flex:1}
+.pm-form-actions{display:flex;gap:8px;margin-top:10px}
+.pm-form-cancel{flex:1;padding:9px 0;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:12px;font-weight:500;color:#6b7280;cursor:pointer;font-family:inherit}
+.pm-form-cancel:active{background:#f9fafb}
+.pm-form-submit{flex:1;padding:9px 0;border:none;border-radius:8px;background:#166534;font-size:12px;font-weight:600;color:#fff;cursor:pointer;font-family:inherit}
+.pm-form-submit:active{background:#15532d}
+.pay-bar-save{text-align:center;font-size:12px;font-weight:600;color:#15803d;padding:4px 0 8px}
+.pay-btn-wrap{padding:4px 16px 4px}
+.pay-btn-m{width:100%;background:#166534;color:#fff;border:none;border-radius:12px;padding:14px 0;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
+.pay-btn-m:active{background:#15532d}
+.flat-m{margin:0 16px 8px}
+.flat-m-wrap{border:1px solid #e5e7eb;border-radius:10px;overflow:hidden}
+.home-bar{width:134px;height:5px;background:#1a1a1a;border-radius:3px;margin:8px auto 4px}
+</style>
+
+<div class="phone" id="phone"></div>
+
+<script>
+const RATE=0.097;
+const JOBS=[
+  {id:"unassigned",name:"Unassigned",sub:"",credits:[{id:"ucr1",type:"Account credit",ref:"CR #0099",date:"03-01-2026",amount:62.50,onStmt:true,isNew:false}],invoices:[{id:"u1",num:"#2401-535800",total:347.20,onStmt:true,isNew:false,soldOn:"01-15-2026",overdue:true},{id:"u2",num:"#2401-535801",total:158.90,onStmt:false,isNew:true,soldOn:"03-10-2026",overdue:false}]},
+  {id:"johnson",name:"Johnson",sub:"School",credits:[{id:"jcr1",type:"Overpayment",ref:"PMT #7712",date:"02-01-2026",amount:145,onStmt:true,isNew:false}],invoices:[{id:"j1",num:"#2401-534901",total:482.15,onStmt:false,isNew:false,soldOn:"01-05-2026",overdue:false},{id:"j2",num:"#2401-534902",total:315.80,onStmt:false,isNew:false,soldOn:"01-18-2026",overdue:false},{id:"j3",num:"#2401-534903",total:198.40,onStmt:true,isNew:false,soldOn:"12-10-2025",overdue:true},{id:"j4",num:"#2401-534904",total:274.55,onStmt:true,isNew:false,soldOn:"11-15-2025",overdue:true},{id:"j5",num:"#2401-534905",total:391.20,onStmt:false,isNew:true,soldOn:"03-01-2026",overdue:false},{id:"j6",num:"#2401-534906",total:228.90,onStmt:false,isNew:true,soldOn:"03-08-2026",overdue:false}]},
+  {id:"schon",name:"Schon",sub:"Academy",credits:[{id:"scr1",type:"Overpayment credit",ref:"PMT #8821",date:"02-14-2026",amount:218.75,onStmt:true,isNew:false},{id:"scr2",type:"Return — lumber",ref:"RTN #2401-534888",date:"01-30-2026",amount:84.20,onStmt:true,isNew:false},{id:"scr3",type:"Price adjustment",ref:"ADJ #0192",date:"01-08-2026",amount:32.50,onStmt:false,isNew:true}],invoices:[{id:"s1",num:"#2401-534910",total:216.37,onStmt:true,isNew:false,soldOn:"08-20-2025",overdue:true},{id:"s2",num:"#2401-534911",total:189.50,onStmt:true,isNew:false,soldOn:"08-20-2025",overdue:true},{id:"s3",num:"#2401-534912",total:143.22,onStmt:true,isNew:false,soldOn:"09-05-2025",overdue:true},{id:"s4",num:"#2401-534913",total:98.75,onStmt:true,isNew:false,soldOn:"09-18-2025",overdue:true},{id:"s5",num:"#2401-534914",total:204.60,onStmt:false,isNew:false,soldOn:"01-20-2026",overdue:false},{id:"s6",num:"#2401-534915",total:176.30,onStmt:false,isNew:false,soldOn:"01-28-2026",overdue:false},{id:"s7",num:"#2401-534916",total:107.49,onStmt:true,isNew:false,soldOn:"10-10-2025",overdue:true},{id:"s8",num:"#2401-534917",total:134,onStmt:false,isNew:false,soldOn:"02-01-2026",overdue:false},{id:"s9",num:"#2401-534918",total:72,onStmt:true,isNew:false,soldOn:"11-01-2025",overdue:true},{id:"s10",num:"#2401-534919",total:143.89,onStmt:false,isNew:false,soldOn:"02-10-2026",overdue:false},{id:"s11",num:"#2401-534920",total:218.75,onStmt:true,isNew:false,soldOn:"10-25-2025",overdue:true},{id:"s12",num:"#2401-534921",total:174.75,onStmt:false,isNew:false,soldOn:"02-05-2026",overdue:false},{id:"s13",num:"#2401-534955",total:312.40,onStmt:false,isNew:true,soldOn:"03-05-2026",overdue:false},{id:"s14",num:"#2401-534961",total:189.15,onStmt:false,isNew:true,soldOn:"03-12-2026",overdue:false},{id:"s15",num:"#2401-534978",total:97.80,onStmt:false,isNew:true,soldOn:"03-18-2026",overdue:false}]},
+  {id:"riverside",name:"Riverside",sub:"Commons",credits:[],invoices:[{id:"r1",num:"#2401-535001",total:892.40,onStmt:true,isNew:false,soldOn:"12-20-2025",overdue:true},{id:"r2",num:"#2401-535002",total:445,onStmt:true,isNew:false,soldOn:"01-10-2026",overdue:true},{id:"r3",num:"#2401-535003",total:310.75,onStmt:false,isNew:false,soldOn:"01-25-2026",overdue:false},{id:"r4",num:"#2401-535004",total:178.20,onStmt:false,isNew:true,soldOn:"03-02-2026",overdue:false}]},
+  {id:"maplewood",name:"Maplewood",sub:"Estates",credits:[{id:"mcr1",type:"Volume discount",ref:"DSC #0441",date:"02-20-2026",amount:375,onStmt:true,isNew:false}],invoices:[{id:"m1",num:"#2401-535010",total:1240.50,onStmt:true,isNew:false,soldOn:"11-01-2025",overdue:true},{id:"m2",num:"#2401-535011",total:875.30,onStmt:true,isNew:false,soldOn:"11-20-2025",overdue:true},{id:"m3",num:"#2401-535012",total:620,onStmt:false,isNew:false,soldOn:"01-30-2026",overdue:false},{id:"m4",num:"#2401-535013",total:430.80,onStmt:false,isNew:true,soldOn:"03-04-2026",overdue:false},{id:"m5",num:"#2401-535014",total:290.45,onStmt:false,isNew:true,soldOn:"03-15-2026",overdue:false}]},
+  {id:"grandview",name:"Grandview",sub:"Terraces",credits:[{id:"gcr1",type:"Overpayment",ref:"PMT #9031",date:"02-28-2026",amount:520,onStmt:true,isNew:false}],invoices:[{id:"g1",num:"#2401-535500",total:2140,onStmt:true,isNew:false,soldOn:"09-10-2025",overdue:true},{id:"g2",num:"#2401-535501",total:1380.50,onStmt:true,isNew:false,soldOn:"10-05-2025",overdue:true},{id:"g3",num:"#2401-535502",total:890.25,onStmt:false,isNew:false,soldOn:"02-01-2026",overdue:false},{id:"g4",num:"#2401-535503",total:560,onStmt:false,isNew:true,soldOn:"03-06-2026",overdue:false}]},
+  {id:"lakeside",name:"Lakeside",sub:"Manor",credits:[{id:"lcr1",type:"Return — flooring",ref:"RTN #2401-535712",date:"01-15-2026",amount:480,onStmt:true,isNew:false}],invoices:[{id:"l1",num:"#2401-535700",total:1680,onStmt:true,isNew:false,soldOn:"08-15-2025",overdue:true},{id:"l2",num:"#2401-535701",total:945.60,onStmt:true,isNew:false,soldOn:"09-20-2025",overdue:true},{id:"l3",num:"#2401-535702",total:520.30,onStmt:false,isNew:false,soldOn:"02-08-2026",overdue:false},{id:"l4",num:"#2401-535703",total:310.45,onStmt:false,isNew:true,soldOn:"03-10-2026",overdue:false}]}
+];
+
+let S={filter:"stmt",groupOn:true,sortMode:"pastdue",sortOpen:false,filterOpen:false,payExpanded:false,payMethodOpen:false,addingMethod:false,addType:"bank",selectedBank:0,expanded:{},checked:{},crSel:{}};
+const banks=[
+  {name:"Citizens Bank NA",last4:"6340",type:"Checking"},
+  {name:"Chase Business",last4:"8821",type:"Checking"},
+  {name:"Bank of America",last4:"4455",type:"Savings"},
+];
+JOBS.forEach(j=>{j.invoices.forEach(i=>{if(i.onStmt)S.checked[i.id]=true});j.credits.forEach(c=>{if(c.onStmt)S.crSel[c.id]=true})});
+
+const fm=n=>"$"+Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const fc=n=>"("+fm(n)+")";
+const sm=(a,f)=>parseFloat(a.reduce((s,x)=>s+f(x),0).toFixed(2));
+const chk='<svg viewBox="0 0 10 8" fill="none" style="width:10px;height:8px"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const chevSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><polyline points="18 15 12 9 6 15"/></svg>';
+const sortSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><path d="M7 3v18M7 3l-4 4M7 3l4 4M17 21V3M17 21l-4-4M17 21l4-4"/></svg>';
+const backSvg='<svg viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><polyline points="15 18 9 12 15 6"/></svg>';
+const batSvg='<svg width="25" height="12" viewBox="0 0 25 12"><rect x="0" y="0" width="22" height="11" rx="2" stroke="#111" stroke-width="1" fill="none"/><rect x="1.5" y="1.5" width="17" height="8" rx="1" fill="#111"/><rect x="23" y="3" width="2" height="5" rx="1" fill="#111"/></svg>';
+const wifiSvg='<svg width="16" height="12" viewBox="0 0 16 12" fill="#111"><path d="M8 10.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM8 7c1.7 0 3.2.7 4.3 1.8l-1.4 1.4C10 9.4 9.1 9 8 9s-2 .4-2.9 1.2L3.7 8.8C4.8 7.7 6.3 7 8 7zm0-4c2.8 0 5.3 1.1 7.1 3l-1.4 1.4C12.2 5.9 10.2 5 8 5S3.8 5.9 2.3 7.4L.9 6C2.7 4.1 5.2 3 8 3z"/></svg>';
+const sigSvg='<svg width="17" height="12" viewBox="0 0 17 12" fill="#111"><rect x="0" y="8" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="7" rx="0.5"/><rect x="9" y="2" width="3" height="10" rx="0.5"/><rect x="13.5" y="0" width="3" height="12" rx="0.5"/></svg>';
+
+function visInvs(){return JOBS.flatMap(j=>j.invoices.filter(i=>S.filter==="stmt"?i.onStmt:S.filter==="new"?i.isNew:true).map(i=>({job:j,inv:i})))}
+function visCrs(){return JOBS.flatMap(j=>j.credits.filter(c=>S.filter==="stmt"?c.onStmt:S.filter==="new"?c.isNew:true).map(c=>({job:j,credit:c})))}
+function allChecked(){return JOBS.flatMap(j=>j.invoices.filter(i=>S.checked[i.id]).map(i=>({job:j,inv:i})))}
+function allCrSel(){return JOBS.flatMap(j=>j.credits.filter(c=>S.crSel[c.id]).map(c=>({job:j,credit:c})))}
+function vjIds(){const vi=visInvs(),vc=visCrs(),s=new Set();vi.forEach(p=>s.add(p.job.id));vc.forEach(p=>s.add(p.job.id));return s}
+
+function sortJobs(list){
+  const vi=visInvs();
+  return[...list].sort((a,b)=>{
+    const pd=j=>sm(vi.filter(p=>p.job.id===j.id&&p.inv.overdue),p=>p.inv.total);
+    const bal=j=>sm(j.invoices,i=>i.total);
+    switch(S.sortMode){
+      case"pastdue":return pd(b)-pd(a);case"pastdue-asc":return pd(a)-pd(b);
+      case"balance-desc":return bal(b)-bal(a);case"balance-asc":return bal(a)-bal(b);
+      case"name-asc":return(a.name+a.sub).localeCompare(b.name+b.sub);case"name-desc":return(b.name+b.sub).localeCompare(a.name+a.sub);
+      default:return 0;
+    }
+  });
+}
+
+function render(){
+  const vi=visInvs(),vc=visCrs(),ci=allChecked(),cs=allCrSel();
+  const visT=sm(vi,p=>p.inv.total);
+  const visPD=S.filter==="new"?0:parseFloat((visT*0.6).toFixed(2));
+  const visCur=parseFloat((visT-visPD).toFixed(2));
+  const visCrT=sm(vc,p=>p.credit.amount);
+  const invSub=sm(ci,p=>p.inv.total),crApp=sm(cs,p=>p.credit.amount);
+  const disc=invSub>0?parseFloat((invSub*RATE).toFixed(2)):0;
+  const pay=Math.max(0,parseFloat((invSub-crApp-disc).toFixed(2)));
+  const hasSel=ci.length>0;
+  const stmtInvs=JOBS.flatMap(j=>j.invoices.filter(i=>i.onStmt));
+  const allStmtSelected=stmtInvs.length>0&&stmtInvs.every(i=>S.checked[i.id]);
+  const payLabel=allStmtSelected&&S.filter==="stmt"?"Pay current statement":"Pay "+fm(pay)+" of statement";
+  const ids=vjIds();
+  const vJ=sortJobs(JOBS.filter(j=>ids.has(j.id)));
+  const allExp=vJ.length>0&&vJ.every(j=>S.expanded[j.id]);
+  const allChk=vi.length>0&&vi.every(p=>S.checked[p.inv.id]);
+  const curLabel=S.filter==="stmt"?"Current statement":S.filter==="new"?"Since last statement":"All current";
+  const sortLabels={pastdue:"Most past due","pastdue-asc":"Least past due","balance-desc":"Highest balance","balance-asc":"Lowest balance","name-asc":"Name A–Z","name-desc":"Name Z–A"};
+
+  let h=`<div class="status-bar"><span class="status-time">9:41</span><div class="status-icons">${sigSvg}${wifiSvg}${batSvg}</div></div>`;
+
+  h+=`<div class="header"><div class="header-left"><div class="back-arrow">${backSvg}</div><div class="header-title"><div>Bliffert Lumber & Design</div><div>Harbor Homes charges</div></div></div><div class="avatar-sm">RJ</div></div>`;
+
+  const chevDown='<svg viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><polyline points="6 9 12 15 18 9"/></svg>';
+  const filterLabels={stmt:"Current statement","new":"Since last statement",all:"All charges"};
+
+  h+=`<div class="filter-dd">
+    <button class="filter-dd-btn" onclick="togFilter()">${filterLabels[S.filter]}${chevDown}</button>
+    <div class="filter-dd-menu${S.filterOpen?" open":""}">
+      ${Object.entries(filterLabels).map(([k,v])=>`<button class="filter-dd-opt${S.filter===k?" active":""}" onclick="setF('${k}')">${v}</button>`).join("")}
+    </div>
+  </div>`;
+
+  h+=`<div class="scroll">`;
+
+  h+=`<div class="stats-m">
+    <div class="stat-m"><div class="stat-m-label">Total due</div><div class="stat-m-val">${fm(visT)}</div></div>
+    <div class="stat-m"><div class="stat-m-label">${S.filter==="stmt"?"Current":S.filter==="new"?"New":"Current"}</div><div class="stat-m-val">${fm(visCur)}</div></div>
+    ${S.filter!=="new"?`<div class="stat-m"><div class="stat-m-label">Past due</div><div class="stat-m-val">${fm(visPD)}</div></div>`:""}
+    ${visCrT>0?`<div class="stat-m"><div class="stat-m-label">Total credits</div><div class="stat-m-val green">-${fm(visCrT)}</div></div>`:""}
+  </div>`;
+
+  h+=`<div class="ctrl-m">
+    <span class="ctrl-m-count">${S.groupOn?vJ.length+" job"+(vJ.length!==1?"s":""):vi.length+" inv"}</span>
+    <button class="ctrl-m-btn" onclick="togSelAll()">${allChk?"Deselect":"Select all"}</button>
+    ${S.groupOn?`<button class="ctrl-m-btn" onclick="togExpAll()">${allExp?"Collapse":"Expand"}</button>`:""}
+    <span style="flex:1"></span>
+    <div class="toggle-m"><div class="toggle-m-track${S.groupOn?" on":""}" onclick="togGroup()"><div class="toggle-m-thumb"></div></div><span class="toggle-m-label" onclick="togGroup()">Group</span></div>
+  </div>`;
+
+  h+=`<div class="sort-m"><button onclick="togSort()">${sortSvg} ${sortLabels[S.sortMode]}</button>
+    <div class="sort-m-menu${S.sortOpen?" open":""}">
+      ${Object.entries(sortLabels).map(([k,v])=>`<button class="sort-m-opt${S.sortMode===k?" active":""}" onclick="setSort('${k}')">${v}</button>`).join("")}
+    </div>
+  </div>`;
+
+  if(S.groupOn){
+    vJ.forEach(job=>{
+      const pairs=vi.filter(p=>p.job.id===job.id);
+      const jobCr=vc.filter(p=>p.job.id===job.id);
+      const jpd=sm(pairs.filter(p=>p.inv.overdue),p=>p.inv.total);
+      const jCrT=sm(jobCr,p=>p.credit.amount);
+      const allOn=pairs.length>0&&pairs.every(p=>S.checked[p.inv.id]);
+      const exp=S.expanded[job.id];
+      const ic=pairs.length,cc=jobCr.length;
+      const parts=[];if(ic)parts.push(ic+" inv");if(cc)parts.push(cc+" cr");
+
+      h+=`<div class="job-m"><div class="job-m-hdr" onclick="togExp('${job.id}')">
+        <div class="chk-m${allOn?" on":""}" onclick="event.stopPropagation();togJobChk('${job.id}')">${allOn?chk:""}</div>
+        <div class="chev-m${exp?" open":""}">${chevSvg}</div>
+        <div class="job-m-info">
+          <div class="job-m-name">${job.name} ${job.sub}</div>
+          <div class="job-m-meta">
+            <span>${parts.join(" · ")}</span>
+            ${jpd>0?`<span class="red">PD ${fm(jpd)}</span>`:""}
+            ${jCrT>0?`<span class="green">-${fm(jCrT)}</span>`:""}
+          </div>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#111827;white-space:nowrap">${fm(sm(pairs,p=>p.inv.total))}</div>
+      </div>`;
+
+      if(exp){
+        h+=`<div class="job-m-body">`;
+        jobCr.forEach(p=>{
+          h+=`<div class="cr-m" onclick="togCr('${p.credit.id}')">
+            <div class="chk-m${S.crSel[p.credit.id]?" on":""}" onclick="event.stopPropagation();togCr('${p.credit.id}')">${S.crSel[p.credit.id]?chk:""}</div>
+            <div class="cr-m-info"><div class="cr-m-type">${p.credit.type}</div><div class="cr-m-ref">${p.credit.ref}</div></div>
+            ${p.credit.isNew?'<span class="badge-m">NEW</span>':""}
+            <div class="cr-m-amt">-${fm(p.credit.amount)}</div>
+          </div>`;
+        });
+        pairs.forEach((p,i)=>{
+          h+=`<div class="inv-m${jobCr.length>0&&i===0?" cr-m-divider":""}" onclick="togInv('${p.inv.id}')">
+            <div class="chk-m${S.checked[p.inv.id]?" on":""}" onclick="event.stopPropagation();togInv('${p.inv.id}')">${S.checked[p.inv.id]?chk:""}</div>
+            <div class="inv-m-info"><div class="inv-m-num">${p.inv.num}</div><div class="inv-m-date">Sold on ${p.inv.soldOn}</div></div>
+            ${p.inv.isNew?'<span class="badge-m">NEW</span>':""}
+            <div class="inv-m-amt">${fm(p.inv.total)}</div>
+          </div>`;
+        });
+        h+=`</div>`;
+      }
+      h+=`</div>`;
+    });
+  } else {
+    h+=`<div class="flat-m"><div class="flat-m-wrap">`;
+    const flatCr=vc;
+    flatCr.forEach(p=>{
+      h+=`<div class="cr-m" onclick="togCr('${p.credit.id}')">
+        <div class="chk-m${S.crSel[p.credit.id]?" on":""}" onclick="event.stopPropagation();togCr('${p.credit.id}')">${S.crSel[p.credit.id]?chk:""}</div>
+        <div class="cr-m-info"><div class="cr-m-type">${p.credit.type}</div><div class="cr-m-ref">${p.credit.ref} · ${p.job.name} ${p.job.sub}</div></div>
+        ${p.credit.isNew?'<span class="badge-m">NEW</span>':""}
+        <div class="cr-m-amt">-${fm(p.credit.amount)}</div>
+      </div>`;
+    });
+    vi.forEach((p,i)=>{
+      h+=`<div class="inv-m${flatCr.length>0&&i===0?" cr-m-divider":""}" onclick="togInv('${p.inv.id}')">
+        <div class="chk-m${S.checked[p.inv.id]?" on":""}" onclick="event.stopPropagation();togInv('${p.inv.id}')">${S.checked[p.inv.id]?chk:""}</div>
+        <div class="inv-m-info"><div class="inv-m-num">${p.inv.num}</div><div class="inv-m-date">${p.job.name} ${p.job.sub} · ${p.inv.soldOn}</div></div>
+        ${p.inv.isNew?'<span class="badge-m">NEW</span>':""}
+        <div class="inv-m-amt">${fm(p.inv.total)}</div>
+      </div>`;
+    });
+    h+=`</div></div>`;
+  }
+
+  h+=`</div>`;
+
+  const activeBank=banks[S.selectedBank];
+
+  if(hasSel){
+    const cjIds=[...new Set(ci.map(p=>p.job.id))];
+    const addSvg='<svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+    h+=`<div class="pay-bar">
+      <div class="pay-bar-handle" onclick="togPay()"><div class="pay-bar-handle-line"></div></div>
+      <div class="pay-bar-collapsed">
+        <div class="pay-bar-total-row"><span class="pay-bar-total-label">Total payment</span><span class="pay-bar-total-amt">${fm(pay)}</span></div>
+        <div class="pay-bar-bank"><span>${activeBank.name} ****${activeBank.last4}</span><button onclick="event.stopPropagation();openPayMethod()">Change</button></div>
+      </div>
+      <div class="pay-bar-expanded${S.payExpanded?" show":""}">
+        ${S.payMethodOpen?`<div class="pm-dialog">
+          <div class="pm-title">Payment method</div>
+          ${S.addingMethod?`<div class="pm-form">
+            <div class="pm-form-title">Add payment method</div>
+            <div class="pm-type-picker">
+              <div class="pm-type-opt${S.addType==="bank"?" selected":""}" onclick="setAddType('bank')"><div class="pm-type-opt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="${S.addType==="bank"?"#166534":"#9ca3af"}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></svg></div><div class="pm-type-opt-label">Bank account</div></div>
+              <div class="pm-type-opt${S.addType==="card"?" selected":""}" onclick="setAddType('card')"><div class="pm-type-opt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="${S.addType==="card"?"#166534":"#9ca3af"}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div class="pm-type-opt-label">Credit/debit card</div></div>
+            </div>
+            ${S.addType==="bank"?`
+              <div class="pm-form-field"><div class="pm-form-label">Bank name</div><input class="pm-form-input" id="pm-bank" placeholder="e.g. Wells Fargo"></div>
+              <div class="pm-form-row">
+                <div class="pm-form-field"><div class="pm-form-label">Routing number</div><input class="pm-form-input" id="pm-routing" placeholder="9 digits"></div>
+                <div class="pm-form-field"><div class="pm-form-label">Account number</div><input class="pm-form-input" id="pm-acct" placeholder="Account #"></div>
+              </div>
+              <div class="pm-form-row">
+                <div class="pm-form-field"><div class="pm-form-label">Account type</div>
+                  <select class="pm-form-input" id="pm-type"><option>Checking</option><option>Savings</option></select>
+                </div>
+                <div class="pm-form-field"><div class="pm-form-label">Nickname (optional)</div><input class="pm-form-input" id="pm-nick" placeholder="e.g. Main operating"></div>
+              </div>
+            `:`
+              <div class="pm-form-field"><div class="pm-form-label">Card number</div><input class="pm-form-input" id="pm-cardnum" placeholder="1234 5678 9012 3456" maxlength="19"></div>
+              <div class="pm-form-row">
+                <div class="pm-form-field"><div class="pm-form-label">Expiration</div><input class="pm-form-input" id="pm-exp" placeholder="MM / YY"></div>
+                <div class="pm-form-field"><div class="pm-form-label">CVV</div><input class="pm-form-input" id="pm-cvv" placeholder="123" maxlength="4"></div>
+              </div>
+              <div class="pm-form-field"><div class="pm-form-label">Name on card</div><input class="pm-form-input" id="pm-cardname" placeholder="Full name"></div>
+              <div class="pm-form-field"><div class="pm-form-label">Billing ZIP</div><input class="pm-form-input" id="pm-zip" placeholder="ZIP code" maxlength="10"></div>
+            `}
+            <div class="pm-form-actions">
+              <button class="pm-form-cancel" onclick="cancelAdd()">Cancel</button>
+              <button class="pm-form-submit" onclick="submitAdd()">Add ${S.addType==="bank"?"account":"card"}</button>
+            </div>
+          </div>`:`${banks.map((b,i)=>`<div class="pm-opt${S.selectedBank===i?" selected":""}" onclick="selectBank(${i})">
+            <div class="pm-radio"><div class="pm-radio-dot"></div></div>
+            <div class="pm-opt-info"><div class="pm-opt-name">${b.name} ****${b.last4}</div><div class="pm-opt-detail">${b.type}</div></div>
+          </div>`).join("")}
+          <div class="pm-add" onclick="startAdd()"><div class="pm-add-icon">${addSvg}</div><span class="pm-add-label">Add new payment method</span></div>`}
+        </div><div class="pay-bar-divider"></div>`:""}
+        ${disc>0?`<div class="pay-bar-save">Pay today to save ${fm(disc)}</div>`:""}
+        <div class="pay-bar-detail"><span class="label">${cjIds.length} Job${cjIds.length!==1?"s":""} · ${ci.length} Inv</span><span class="val">${fm(invSub)}</span></div>
+        <div class="pay-bar-detail"><span class="label">Credits applied</span><span class="val${crApp>0?" green":" muted"}">${crApp?fc(crApp):"—"}</span></div>
+        <div class="pay-bar-detail"><span class="label">Early pay discount</span><span class="val${disc>0?" green":" muted"}">${disc?fc(disc):"—"}</span></div>
+        <div class="pay-bar-divider"></div>
+        <div class="pay-bar-detail"><span class="label" style="font-weight:700;color:#111827">Total payment</span><span class="val" style="font-weight:700;font-size:14px">${fm(pay)}</span></div>
+      </div>
+    </div>
+    <div class="pay-btn-wrap"><button class="pay-btn-m">${payLabel}</button></div>`;
+  } else {
+    h+=`<div class="pay-bar"><div class="pay-bar-handle"><div class="pay-bar-handle-line"></div></div><div style="padding:0 16px 4px"><div class="pay-bar-total-row"><span class="pay-bar-total-label">No invoices selected</span></div></div></div>
+    <div class="pay-btn-wrap"><button class="pay-btn-m" style="opacity:0.4;cursor:default">Select invoices to pay</button></div>`;
+  }
+
+  h+=`<div class="home-bar"></div>`;
+
+  document.getElementById("phone").innerHTML=h;
+}
+
+function setF(f){S.filter=f;S.filterOpen=false;render()}
+function togFilter(){S.filterOpen=!S.filterOpen;render()}
+function togPay(){S.payExpanded=!S.payExpanded;if(!S.payExpanded){S.payMethodOpen=false;S.addingMethod=false}render()}
+function openPayMethod(){S.payExpanded=true;S.payMethodOpen=true;S.addingMethod=false;render()}
+function selectBank(i){S.selectedBank=i;S.payMethodOpen=false;render()}
+function startAdd(){S.addingMethod=true;S.addType="bank";render()}
+function setAddType(t){S.addType=t;render()}
+function cancelAdd(){S.addingMethod=false;render()}
+function submitAdd(){
+  if(S.addType==="bank"){
+    const name=document.getElementById("pm-bank")?.value||"New Bank";
+    const acct=document.getElementById("pm-acct")?.value||"0000";
+    const type=document.getElementById("pm-type")?.value||"Checking";
+    const last4=acct.slice(-4).padStart(4,"0");
+    banks.push({name,last4,type});
+  } else {
+    const num=document.getElementById("pm-cardnum")?.value||"0000";
+    const cardName=document.getElementById("pm-cardname")?.value||"Card";
+    const last4=num.replace(/\s/g,"").slice(-4).padStart(4,"0");
+    banks.push({name:cardName,last4,type:"Card"});
+  }
+  S.selectedBank=banks.length-1;
+  S.addingMethod=false;
+  S.payMethodOpen=false;
+  render();
+}
+function togGroup(){S.groupOn=!S.groupOn;render()}
+function togSort(){S.sortOpen=!S.sortOpen;render()}
+function setSort(s){S.sortMode=s;S.sortOpen=false;render()}
+function togExp(id){S.expanded[id]=!S.expanded[id];render()}
+function togInv(id){S.checked[id]=!S.checked[id];render()}
+function togCr(id){S.crSel[id]=!S.crSel[id];render()}
+function togJobChk(jid){
+  const j=JOBS.find(x=>x.id===jid);
+  const vis=j.invoices.filter(i=>S.filter==="stmt"?i.onStmt:S.filter==="new"?i.isNew:true);
+  const on=vis.every(i=>S.checked[i.id]);
+  vis.forEach(i=>S.checked[i.id]=!on);render();
+}
+function togSelAll(){
+  const vi=visInvs();const on=vi.every(p=>S.checked[p.inv.id]);
+  vi.forEach(p=>S.checked[p.inv.id]=!on);render();
+}
+function togExpAll(){
+  const ids=vjIds();const vJ=JOBS.filter(j=>ids.has(j.id));
+  const on=vJ.every(j=>S.expanded[j.id]);
+  vJ.forEach(j=>S.expanded[j.id]=!on);render();
+}
+
+render();
+</script>
